@@ -1,0 +1,29 @@
+ext {
+    versions = [
+            'kotlin'                : '1.4.31',
+            'core_ktx'              : '1.3.2',
+
+            'appCompat'             : '1.2.0',
+            'material'              : '1.3.0',
+            'constraintLayout'      : '2.0.4',
+
+            'dagger'                : '2.33',
+            'gson'                  : '2.8.6',
+            'okhttpInterceptor'     : '3.9.1',
+            'retrofit2'             : '2.8.0',
+            'retrofitConverter'     : '2.6.2',
+            'coroutinesCore'        : '1.3.8',
+            'coroutinesAndroid'     : '1.3.5',
+            'lifecycle_version'     : '2.3.0',
+            'livedata_version'      : '2.3.0',
+            'nav_version'           : '2.3.4',
+
+            // Room
+            'room'                  : '2.2.6',
+
+            // Unit test
+            'junit'                 : '4.13.2',
+            'test_junit'            : '1.1.2',
+            'expresso'              : '3.3.0'
+    ]
+}
