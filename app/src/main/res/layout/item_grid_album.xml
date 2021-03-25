@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <data>
+
+        <variable
+            name="albumItemData"
+            type="com.badzohugues.staticlbcapp.data.domain.AlbumItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/imvGridItem"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginEnd="@dimen/margin"
+            android:contentDescription="@string/imv_content_description"
+            app:layout_constraintDimensionRatio="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@drawable/shape_square_placeholder" />
+
+        <TextView
+            android:id="@+id/txvId"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:textSize="@dimen/text_size_14"
+            android:text="@{Integer.toString(albumItemData.id)}"
+            android:theme="@style/ItemTitleText"
+            app:layout_constraintEnd_toEndOf="@+id/imvGridItem"
+            app:layout_constraintStart_toStartOf="@+id/imvGridItem"
+            app:layout_constraintTop_toBottomOf="@+id/imvGridItem"
+            tools:text="42" />
+
+        <TextView
+            android:id="@+id/txvGridTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/size_2"
+            android:layout_marginBottom="@dimen/margin"
+            android:text="@{albumItemData.title}"
+            android:theme="@style/TwoSubtitleText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/imvGridItem"
+            app:layout_constraintStart_toStartOf="@+id/imvGridItem"
+            app:layout_constraintTop_toBottomOf="@+id/txvId"
+            tools:text="Album Item 42" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,18 +1,19 @@
-package com.badzohugues.staticlbcapp.ui.home.adapter
+package com.badzohugues.staticlbcapp.ui.albumdetails
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.badzohugues.staticlbcapp.R
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
-import com.badzohugues.staticlbcapp.databinding.ItemAlbumBinding
+import com.badzohugues.staticlbcapp.databinding.ItemGridAlbumBinding
 
-class AlbumAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit) = { }) : RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>() {
+class AlbumDetailsAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit) = { }) : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumViewHolder>() {
     var albumItems: List<AlbumItem> = ArrayList()
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     fun itemClick(itemClick:(item: AlbumItem) -> Unit) = apply { this.itemAlbumClick = itemClick }
 
@@ -24,16 +25,18 @@ class AlbumAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit) = { }
         val albumItem = albumItems[position]
 
         holder.bind(albumItem)
-        holder.thumbnailImv.load(albumItem.thumbnailUrl) {
+        holder.thumbnailImv.load(albumItem.url) {
             crossfade(true)
+            placeholder(R.drawable.shape_square_placeholder)
+            error(R.drawable.shape_square_placeholder)
         }
         holder.itemView.setOnClickListener { itemAlbumClick.invoke(albumItem) }
     }
 
     override fun getItemCount(): Int = albumItems.size
 
-    class AlbumViewHolder(private val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
-        val thumbnailImv = binding.imvThumbnail
+    class AlbumViewHolder(private val binding: ItemGridAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
+        val thumbnailImv = binding.imvGridItem
         fun bind(itemData: AlbumItem) {
             binding.albumItemData = itemData
             binding.executePendingBindings()
@@ -41,7 +44,9 @@ class AlbumAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit) = { }
 
         companion object {
             fun from(parent: ViewGroup): AlbumViewHolder {
-                return AlbumViewHolder(ItemAlbumBinding.inflate(LayoutInflater.from(parent.context),
+                return AlbumViewHolder(
+                    ItemGridAlbumBinding.inflate(
+                        LayoutInflater.from(parent.context),
                     parent,
                     false)
                 )

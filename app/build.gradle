@@ -3,14 +3,11 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-parcelize'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
     compileSdkVersion 29
-
-    dataBinding {
-        enabled = true
-    }
 
     defaultConfig {
         applicationId "com.badzohugues.staticlbcapp"
@@ -23,6 +20,7 @@ android {
     }
 
     buildFeatures {
+        dataBinding true
         viewBinding true
     }
 

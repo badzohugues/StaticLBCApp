@@ -1,9 +1,5 @@
 package com.badzohugues.staticlbcapp.data.db.datasource
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.map
 import com.badzohugues.staticlbcapp.data.db.DbAlbumItem
 import com.badzohugues.staticlbcapp.data.db.dao.AlbumItemDao
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
@@ -50,7 +46,7 @@ class DbDatasource(private val albumItemDao: AlbumItemDao) : TwoWayMapper<AlbumI
     }
 
     suspend fun getAlbumItems(albumId: Int): List<AlbumItem> {
-        return albumItemDao.getAlbums(albumId).map {
+        return albumItemDao.getItemsOfAlbum(albumId).map {
                 dbAlbumItem -> revert(dbAlbumItem)
         }
     }

@@ -6,8 +6,8 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.badzohugues.staticlbcapp.data.db.DbAlbumItem
 
-private const val GET_ALL = "SELECT * FROM albumItem ORDER BY id DESC"
-private const val SELECT_BY_ALBUM_ID = "SELECT * FROM albumItem WHERE albumId IN (:id)"
+private const val GET_ALL = "SELECT * FROM albumItem ORDER BY id ASC"
+private const val SELECT_BY_ALBUM_ID = "SELECT * FROM albumItem WHERE albumId LIKE (:id)"
 
 @Dao
 interface AlbumItemDao {
@@ -21,5 +21,5 @@ interface AlbumItemDao {
     suspend fun getAll(): List<DbAlbumItem>
 
     @Query(SELECT_BY_ALBUM_ID)
-    suspend fun getAlbums(id: Int): List<DbAlbumItem>
+    suspend fun getItemsOfAlbum(id: Int): List<DbAlbumItem>
 }

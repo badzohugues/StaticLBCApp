@@ -10,7 +10,7 @@ class AlbumItemRepository(private val albumItemDao: AlbumItemDao) {
     private val apiDatasource by lazy { ApiDatasource() }
 
     suspend fun fetchAllAlbumItem(): List<AlbumItem> {
-        return apiDatasource.getAlbums()
+        return apiDatasource.getAlbumItems()
     }
 
     suspend fun getAlbums(isConnected: Boolean): List<AlbumItem> {
@@ -20,5 +20,9 @@ class AlbumItemRepository(private val albumItemDao: AlbumItemDao) {
 
     suspend fun saveAllAlbumItems(albumItems: List<AlbumItem>) {
         if (dbDatasource.getAllAlbums().isEmpty()) dbDatasource.insertAll(albumItems)
+    }
+
+    suspend fun getItemsOfAlbum(albumId: Int): List<AlbumItem> {
+        return dbDatasource.getAlbumItems(albumId)
     }
 }
