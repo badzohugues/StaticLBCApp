@@ -2,10 +2,15 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
     compileSdkVersion 29
+
+    dataBinding {
+        enabled = true
+    }
 
     defaultConfig {
         applicationId "com.badzohugues.staticlbcapp"
@@ -53,6 +58,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle_version"
     implementation "androidx.room:room-runtime:$versions.room"
     implementation "androidx.room:room-ktx:$versions.room"
+    implementation "androidx.navigation:navigation-fragment-ktx:$versions.fragment"
+    implementation "androidx.navigation:navigation-ui-ktx:$versions.navigation"
+    implementation "androidx.legacy:legacy-support-v4:$versions.legacySupport"
+    implementation "io.coil-kt:coil:$versions.coil"
     kapt "androidx.room:room-compiler:$versions.room"
 
     testImplementation "androidx.room:room-testing:$versions.room"
