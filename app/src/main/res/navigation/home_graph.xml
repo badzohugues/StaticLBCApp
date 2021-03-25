@@ -9,5 +9,24 @@
         android:id="@+id/homeFragment"
         android:name="com.badzohugues.staticlbcapp.ui.home.HomeFragment"
         android:label="@string/home_fragment_toolbar_title"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_albumDetails"
+            app:destination="@id/albumDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/albumDetails"
+        android:name="com.badzohugues.staticlbcapp.ui.albumdetails.AlbumDetailsFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_album_details">
+        <argument
+            android:name="albumId"
+            app:argType="integer" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_albumDetails_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
