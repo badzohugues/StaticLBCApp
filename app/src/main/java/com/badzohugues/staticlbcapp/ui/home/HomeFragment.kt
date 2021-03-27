@@ -13,7 +13,6 @@ import com.badzohugues.staticlbcapp.R
 import com.badzohugues.staticlbcapp.common.BaseFragment
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.databinding.FragmentHomeBinding
-import com.badzohugues.staticlbcapp.misc.ErrorMessage
 import com.badzohugues.staticlbcapp.misc.NetworkHelper
 import com.badzohugues.staticlbcapp.misc.Status
 import com.badzohugues.staticlbcapp.misc.itemdecoration.SpacingDecoration
@@ -52,11 +51,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, List<AlbumItem>>() {
     }
 
     override fun prepareData() {
-        homeViewModel.albums().observe(viewLifecycleOwner, {
-            when (it.status) {
-                Status.SUCCESS -> showSuccess(it.data ?: emptyList())
+        homeViewModel.albums().observe(viewLifecycleOwner, { result ->
+            when (result.status) {
+                Status.SUCCESS -> showSuccess(result.data ?: emptyList())
                 Status.LOADING -> showLoading()
-                Status.ERROR -> activity?.let { context -> showError(it.message ?: context.resources.getString(ErrorMessage.UNKNOWN_ERROR.resId)) }
+                Status.ERROR -> activity?.let { context -> showError(result.message ?: context.resources.getString(R.string.error_unknown)) }
             }
         })
     }
@@ -65,7 +64,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, List<AlbumItem>>() {
         with(binding) {
             progressBar.visibility = View.VISIBLE
             noResultTxv.visibility = View.GONE
-            albumRecycler.visibility = View.GONE
         }
     }
 
@@ -81,7 +79,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, List<AlbumItem>>() {
     override fun showError(message: String) {
         with(binding) {
             progressBar.visibility = View.GONE
-            albumRecycler.visibility = View.GONE
             noResultTxv.visibility = View.VISIBLE
             activity?.let { Toast.makeText(it, message, Toast.LENGTH_SHORT).show() }
         }

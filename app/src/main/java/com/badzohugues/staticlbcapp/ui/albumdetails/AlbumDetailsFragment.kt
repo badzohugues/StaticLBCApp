@@ -13,7 +13,6 @@ import com.badzohugues.staticlbcapp.R
 import com.badzohugues.staticlbcapp.common.BaseFragment
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.databinding.FragmentAlbumDetailsBinding
-import com.badzohugues.staticlbcapp.misc.ErrorMessage
 import com.badzohugues.staticlbcapp.misc.Status
 import com.badzohugues.staticlbcapp.misc.itemdecoration.SpacingDecoration
 import com.badzohugues.staticlbcapp.ui.home.HomeViewModel
@@ -48,12 +47,11 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, List<Albu
     }
 
     override fun prepareData() {
-        homeViewModel.albumItems().observe(viewLifecycleOwner, {
+        homeViewModel.itemsOfAlbum().observe(viewLifecycleOwner, {
             when (it.status) {
                 Status.SUCCESS -> showSuccess(it.data ?: emptyList())
                 Status.LOADING -> showLoading()
-                Status.ERROR -> activity?.let { context -> showError(it.message ?: context.resources.getString(
-                    ErrorMessage.UNKNOWN_ERROR.resId)) }
+                Status.ERROR -> activity?.let { context -> showError(it.message ?: context.resources.getString(R.string.error_unknown)) }
             }
         })
     }

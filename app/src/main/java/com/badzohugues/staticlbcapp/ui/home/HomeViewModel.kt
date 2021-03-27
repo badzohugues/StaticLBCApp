@@ -1,121 +1,96 @@
 package com.badzohugues.staticlbcapp.ui.home
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.badzohugues.staticlbcapp.data.db.room.StaticLBCDatabase
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
-import com.badzohugues.staticlbcapp.data.repository.AlbumItemRepository
-import com.badzohugues.staticlbcapp.misc.DataWrapper
+import com.badzohugues.staticlbcapp.data.repository.Repository
+import com.badzohugues.staticlbcapp.misc.ResultWrapper
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
 private const val TAG = "HomeViewModel"
 private const val TIMEOUT = 7000L
-private const val SHORT_TIMEOUT = 5000L
 
-class HomeViewModel(application: Application): AndroidViewModel(application) {
-    private val _albums = MutableLiveData<DataWrapper<List<AlbumItem>>>()
-    private val _albumItems = MutableLiveData<DataWrapper<List<AlbumItem>>>()
-    private val repository : AlbumItemRepository
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    private val repository: Repository
+    ): ViewModel() {
+
+    private val _albums = MutableLiveData<ResultWrapper<List<AlbumItem>>>()
+    private val _itemsOfAlbum = MutableLiveData<ResultWrapper<List<AlbumItem>>>()
     private var lastAlbumId = 0
     private var isExceptionFromServer = false
 
-    init {
-        val albumItemDao = StaticLBCDatabase.getDatabase(application).albumItemDao()
-        repository = AlbumItemRepository(albumItemDao)
-    }
-
     private val handler = CoroutineExceptionHandler { _, exception ->
-        Log.d(TAG,"Exception thrown somewhere within parent or child: $exception.")
-        if (isExceptionFromServer) {    // in case we can't reach server we get data from database
+        Log.d(TAG, "Exception thrown somewhere within parent or child: $exception.")
+        if (isExceptionFromServer) {    // in case we can't reach data from server we get data from database
             getAlbums(false)
-            Log.d(TAG,"Trying to get data from database")
+            Log.d(TAG, "Trying to get data from database")
             !isExceptionFromServer
         }
     }
 
-
-    private fun updateAlbumsDatas(allAlbums: DataWrapper<List<AlbumItem>>) {
+    private fun updateAlbumsDatas(allAlbums: ResultWrapper<List<AlbumItem>>) {
         _albums.value = allAlbums
     }
 
-    private fun updateItemsOfAlbum(itemsOfAlbum: DataWrapper<List<AlbumItem>>, currentAlbumId: Int) {
-        _albumItems.value = itemsOfAlbum
+    private fun updateItemsOfAlbum(itemsOfAlbum: ResultWrapper<List<AlbumItem>>, currentAlbumId: Int) {
+        _itemsOfAlbum.value = itemsOfAlbum
         lastAlbumId = currentAlbumId
     }
 
-    fun albums(): LiveData<DataWrapper<List<AlbumItem>>> = _albums
+    fun albums(): LiveData<ResultWrapper<List<AlbumItem>>> = _albums
 
-    fun albumItems(): LiveData<DataWrapper<List<AlbumItem>>> = _albumItems
+    fun itemsOfAlbum(): LiveData<ResultWrapper<List<AlbumItem>>> = _itemsOfAlbum
 
     fun getAlbums(isConnected : Boolean) {
-        val getAlbumsJob = viewModelScope.launch(handler) {
+        viewModelScope.launch(handler) {
             val jobAllAlbumItems = async(start = CoroutineStart.LAZY) {
                 isExceptionFromServer = true
                 repository.fetchAllAlbumItem()
             }
-            val jobGetAlbumsOffline = async(start = CoroutineStart.LAZY) { repository.getAlbums(isConnected) }
+            val jobGetAlbumsOffline = async(start = CoroutineStart.LAZY) {
+                withContext(Dispatchers.IO) { repository.getAlbums() }
+            }
 
-            withTimeout(TIMEOUT) {
+            withTimeout(7000L) {
                 supervisorScope {
                     var allAlbums: List<AlbumItem> = emptyList()
-                    val isDataEmpty = _albums.value?.data.isNullOrEmpty() // if data already showed in UI
+                    val isDataEmpty = _albums.value?.data.isNullOrEmpty() // if data already shew by UI
 
                     if(isConnected && isDataEmpty) {
-                        _albums.value = DataWrapper.loading(emptyList())
+                        _albums.value = ResultWrapper.loading(emptyList())
 
-                        // Because we can display data even if there's an exception with insertion in database
                         val jobSaveAllAlbumItems = launch {
                             allAlbums = jobAllAlbumItems.await()
                             isExceptionFromServer = false
                             repository.saveAllAlbumItems(allAlbums)
                         }
                         jobSaveAllAlbumItems.join()
-                        updateAlbumsDatas(DataWrapper.success(allAlbums.distinctBy { it.albumId }))
+                        updateAlbumsDatas(ResultWrapper.success(allAlbums.distinctBy { it.albumId }))
                     }
                     else if (isDataEmpty) {
-                        _albums.value = DataWrapper.loading(emptyList())
-                        updateAlbumsDatas(DataWrapper.success(jobGetAlbumsOffline.await()))
+                        _albums.value = ResultWrapper.loading(emptyList())
+                        updateAlbumsDatas(ResultWrapper.success(jobGetAlbumsOffline.await()))
                     }
                 }
             }
-        }
-
-        // We catch exception here in last layer
-        getAlbumsJob.invokeOnCompletion { throwable ->
-            if(throwable != null) {
-                Log.d(TAG,"getAlbums $throwable")
-                _albums.value = DataWrapper.error(throwable.message, emptyList())
-            }
-            else {
-                Log.d(TAG,"update due to throwable")
-                updateAlbumsDatas(DataWrapper.success(_albums.value?.data ?: emptyList()))
-            }
+        }.invokeOnCompletion { throwable ->
+            if(throwable != null) _albums.value = ResultWrapper.error(throwable.message, emptyList())
+            else updateAlbumsDatas(ResultWrapper.success(_albums.value?.data))
         }
     }
 
     fun getItemsOfAlbum(albumId: Int) {
-        val getItemsOfAlbumJob = viewModelScope.launch(handler) {
-            val jobGetItemsOfAlbum = async(start = CoroutineStart.LAZY) { repository.getItemsOfAlbum(albumId) }
-            withTimeout(SHORT_TIMEOUT) {
-                if (albumId != lastAlbumId) {
-                    _albumItems.value = DataWrapper.loading(emptyList())
-                    updateItemsOfAlbum(DataWrapper.success(jobGetItemsOfAlbum.await()), albumId)
-                }
-            }
-        }
-
-        getItemsOfAlbumJob.invokeOnCompletion { throwable ->
-            if(throwable != null) {
-                Log.d(TAG, "getItemsOfAlbum $throwable")
-                _albumItems.value = DataWrapper.error(throwable.message, emptyList())
-            }
-            else {
-                Log.d(TAG,"update due to throwable")
-                updateItemsOfAlbum(DataWrapper.success(_albumItems.value?.data ?: emptyList()), lastAlbumId)
+        viewModelScope.launch {
+            val jobGetItemsOfAlbum = async(start = CoroutineStart.LAZY) { withContext(Dispatchers.IO) { repository.getItemsOfAlbum(albumId) } }
+            if (albumId != lastAlbumId) {
+                _itemsOfAlbum.value = ResultWrapper.loading(emptyList())
+                updateItemsOfAlbum(ResultWrapper.success(jobGetItemsOfAlbum.await()), albumId)
             }
         }
     }

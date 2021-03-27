@@ -4,8 +4,11 @@ import com.badzohugues.staticlbcapp.data.db.DbAlbumItem
 import com.badzohugues.staticlbcapp.data.db.dao.AlbumItemDao
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.data.mapper.TwoWayMapper
+import javax.inject.Inject
 
-class DbDatasource(private val albumItemDao: AlbumItemDao) : TwoWayMapper<AlbumItem, DbAlbumItem> {
+class DbDatasource @Inject constructor(
+  private val albumItemDao: AlbumItemDao
+) : TwoWayMapper<AlbumItem, DbAlbumItem> {
 
     override fun transform(item: AlbumItem): DbAlbumItem {
         return DbAlbumItem(
@@ -35,19 +38,15 @@ class DbDatasource(private val albumItemDao: AlbumItemDao) : TwoWayMapper<AlbumI
         albumItemDao.insertAll(items.map { transform(it) })
     }
 
-    suspend fun getAllAlbumItem(): List<AlbumItem> {
-        return albumItemDao.getAll().map { dbItem ->
-            revert(dbItem)
-        }
+    private fun getAllAlbumItem(): List<AlbumItem> {
+        return albumItemDao.getAll().map { dbItem -> revert(dbItem) }
     }
 
-    suspend fun getAllAlbums(): List<AlbumItem> {
+    fun getAllAlbums(): List<AlbumItem> {
         return getAllAlbumItem().distinctBy { it.albumId }
     }
 
-    suspend fun getAlbumItems(albumId: Int): List<AlbumItem> {
-        return albumItemDao.getItemsOfAlbum(albumId).map {
-                dbAlbumItem -> revert(dbAlbumItem)
-        }
+    suspend fun getItemsOfAlbum(albumId: Int): List<AlbumItem> {
+        return albumItemDao.getItemsOfAlbum(albumId).map { dbItem -> revert(dbItem) }
     }
 }

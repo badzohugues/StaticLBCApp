@@ -1,33 +1,18 @@
 package com.badzohugues.staticlbcapp.data.api.datasource
 
 import com.badzohugues.staticlbcapp.data.api.ApiAlbumItem
-import com.badzohugues.staticlbcapp.data.api.factory.ApiFactory
 import com.badzohugues.staticlbcapp.data.api.service.AlbumItemApiService
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.data.mapper.Mapper
+import com.badzohugues.staticlbcapp.misc.ErrorMessage
+import com.badzohugues.staticlbcapp.misc.ResultWrapper
+import java.lang.Exception
+import javax.inject.Inject
 
-class ApiDatasource : Mapper<ApiAlbumItem, AlbumItem> {
-    private val albumItemApiService: AlbumItemApiService by lazy {
-        ApiFactory.retrofitBuilder
-            .build()
-            .create(AlbumItemApiService::class.java)
-    }
+class ApiDatasource @Inject constructor(private val albumItemApiService: AlbumItemApiService) : Mapper<ApiAlbumItem, AlbumItem> {
 
-    suspend fun getAlbumItems(): List<AlbumItem> {
-        return albumItemApiService.fetchAlbumItems().map { transform(it) }
-    }
-
-    suspend fun getAlbums(): List<AlbumItem> {
-        var currentAlbumId = 0
-        val sortedList: MutableList<AlbumItem> = ArrayList()
-
-        albumItemApiService.fetchAlbumItems().sortedBy { it.albumId }.map { apiItem ->
-            if (apiItem.albumId == 0 || apiItem.albumId != currentAlbumId) {
-                sortedList.add(transform(apiItem))
-                currentAlbumId = apiItem.albumId ?: 0
-            }
-        }
-        return sortedList.distinctBy { it.albumId }
+    suspend fun getAllAlbumItems(): List<AlbumItem> {
+        return albumItemApiService.fetchAllAlbumItems().map { transform(it) }
     }
 
     override fun transform(item: ApiAlbumItem): AlbumItem {

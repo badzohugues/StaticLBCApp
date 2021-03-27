@@ -1,7 +1,6 @@
 package com.badzohugues.staticlbcapp.misc
 
-class Constants {
-    companion object {
-        const val BASE_URL = "https://static.leboncoin.fr/"
-    }
+object Constants {
+    const val BASE_URL = "https://static.leboncoin.fr/"
+    const val DATABASE_NAME = "static_lbc_database"
 }
