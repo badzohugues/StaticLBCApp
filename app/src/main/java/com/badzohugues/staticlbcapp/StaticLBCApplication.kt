@@ -5,7 +5,7 @@ import com.badzohugues.staticlbcapp.misc.NetworkHelper
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class StaticLBCApplication: Application() {
+class StaticLBCApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         NetworkHelper.init(this)

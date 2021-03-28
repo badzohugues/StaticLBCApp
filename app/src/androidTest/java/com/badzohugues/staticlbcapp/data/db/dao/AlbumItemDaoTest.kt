@@ -43,21 +43,24 @@ class AlbumItemDaoTest {
 
     @Before
     fun setupDbItems() {
-        dbAlbumItemA = DbAlbumItem(424242,
+        dbAlbumItemA = DbAlbumItem(
+            424242,
             42,
             "AlbumItemTest",
             "https://via.placeholder.com/600/e403d1",
             "https://via.placeholder.com/150/e403d1"
         )
 
-        dbAlbumItemB = DbAlbumItem(242424,
+        dbAlbumItemB = DbAlbumItem(
+            242424,
             42,
             "AlbumItemTest",
             "https://via.placeholder.com/600/e403d1",
             "https://via.placeholder.com/150/e403d1"
         )
 
-        dbAlbumItemC = DbAlbumItem(212142,
+        dbAlbumItemC = DbAlbumItem(
+            212142,
             24,
             "AlbumItemTest",
             "https://via.placeholder.com/600/e403d1",

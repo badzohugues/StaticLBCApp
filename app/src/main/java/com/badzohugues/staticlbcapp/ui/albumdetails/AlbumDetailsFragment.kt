@@ -20,10 +20,14 @@ import com.badzohugues.staticlbcapp.ui.home.HomeViewModel
 private const val COLUMN = 3
 
 class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, List<AlbumItem>>() {
-    private val homeViewModel : HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
     private lateinit var albumDetailsAdapter: AlbumDetailsAdapter
 
-    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?, attachToParent: Boolean): FragmentAlbumDetailsBinding {
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToParent: Boolean
+    ): FragmentAlbumDetailsBinding {
         return FragmentAlbumDetailsBinding.inflate(inflater, container, attachToParent)
     }
 
@@ -35,7 +39,10 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, List<Albu
 
     override fun initViews(context: Context) {
         val linearLayoutManager = GridLayoutManager(context, COLUMN)
-        val decoration = SpacingDecoration(spacing = context.resources.getDimensionPixelSize(R.dimen.small_margin), true)
+        val decoration = SpacingDecoration(
+            spacing = context.resources.getDimensionPixelSize(R.dimen.small_margin),
+            true
+        )
 
         albumDetailsAdapter = AlbumDetailsAdapter()
 
@@ -51,7 +58,11 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, List<Albu
             when (it.status) {
                 Status.SUCCESS -> showSuccess(it.data ?: emptyList())
                 Status.LOADING -> showLoading()
-                Status.ERROR -> activity?.let { context -> showError(it.message ?: context.resources.getString(R.string.error_unknown)) }
+                Status.ERROR -> activity?.let { context ->
+                    showError(
+                        it.message ?: context.resources.getString(R.string.error_unknown)
+                    )
+                }
             }
         })
     }
@@ -67,8 +78,8 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, List<Albu
     override fun showSuccess(data: List<AlbumItem>) {
         with(binding) {
             progressBar.visibility = View.GONE
-            noResultTxv.visibility = if(data.isEmpty()) View.VISIBLE else View.GONE
-            albumItemRecycler.visibility = if(data.isEmpty()) View.GONE else View.VISIBLE
+            noResultTxv.visibility = if (data.isEmpty()) View.VISIBLE else View.GONE
+            albumItemRecycler.visibility = if (data.isEmpty()) View.GONE else View.VISIBLE
             albumDetailsAdapter.albumItems = data
         }
     }

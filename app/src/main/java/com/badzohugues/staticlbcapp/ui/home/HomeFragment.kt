@@ -19,10 +19,14 @@ import com.badzohugues.staticlbcapp.misc.itemdecoration.SpacingDecoration
 
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, List<AlbumItem>>() {
-    private val homeViewModel : HomeViewModel by activityViewModels()
+    private val homeViewModel: HomeViewModel by activityViewModels()
     private lateinit var homeAdapter: HomeAdapter
 
-    override fun getViewBinding(inflater: LayoutInflater, container: ViewGroup?, attachToParent: Boolean): FragmentHomeBinding {
+    override fun getViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToParent: Boolean
+    ): FragmentHomeBinding {
         return FragmentHomeBinding.inflate(inflater, container, attachToParent)
     }
 
@@ -35,11 +39,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, List<AlbumItem>>() {
 
     override fun initViews(context: Context) {
         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val decoration = SpacingDecoration(spacing = context.resources.getDimensionPixelSize(R.dimen.small_margin))
-        homeAdapter = HomeAdapter (itemAlbumClick = { item ->
+        val decoration =
+            SpacingDecoration(spacing = context.resources.getDimensionPixelSize(R.dimen.small_margin))
+        homeAdapter = HomeAdapter(itemAlbumClick = { item ->
             findNavController().navigate(
-                HomeFragmentDirections.actionHomeFragmentToAlbumDetails(item.albumId,
-                    context.getString(R.string.txv_text_album_title, item.albumId))
+                HomeFragmentDirections.actionHomeFragmentToAlbumDetails(
+                    item.albumId,
+                    context.getString(R.string.txv_text_album_title, item.albumId)
+                )
             )
         })
 
@@ -51,11 +58,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, List<AlbumItem>>() {
     }
 
     override fun prepareData() {
-        homeViewModel.albums().observe(viewLifecycleOwner, { result ->
+        homeViewModel.albums.observe(viewLifecycleOwner, { result ->
             when (result.status) {
                 Status.SUCCESS -> showSuccess(result.data ?: emptyList())
                 Status.LOADING -> showLoading()
-                Status.ERROR -> activity?.let { context -> showError(result.message ?: context.resources.getString(R.string.error_unknown)) }
+                Status.ERROR -> activity?.let { context ->
+                    showError(
+                        result.message ?: context.resources.getString(R.string.error_unknown)
+                    )
+                }
             }
         })
     }
@@ -63,6 +74,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, List<AlbumItem>>() {
     override fun showLoading() {
         with(binding) {
             progressBar.visibility = View.VISIBLE
+            albumRecycler.visibility = View.GONE
             noResultTxv.visibility = View.GONE
         }
     }
@@ -70,8 +82,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, List<AlbumItem>>() {
     override fun showSuccess(data: List<AlbumItem>) {
         with(binding) {
             progressBar.visibility = View.GONE
-            noResultTxv.visibility = if(data.isEmpty()) View.VISIBLE else View.GONE
-            albumRecycler.visibility = if(data.isEmpty()) View.GONE else View.VISIBLE
+            noResultTxv.visibility = if (data.isEmpty()) View.VISIBLE else View.GONE
+            albumRecycler.visibility = if (data.isEmpty()) View.GONE else View.VISIBLE
             homeAdapter.albumItems = data
         }
     }

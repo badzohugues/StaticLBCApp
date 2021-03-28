@@ -16,7 +16,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        homeNavController = (supportFragmentManager.findFragmentById(binding.homeNavHost.id) as NavHostFragment).navController
+        homeNavController =
+            (supportFragmentManager.findFragmentById(binding.homeNavHost.id) as NavHostFragment).navController
         setupActionBarWithNavController(homeNavController)
     }
 

@@ -7,7 +7,7 @@ import com.badzohugues.staticlbcapp.data.mapper.TwoWayMapper
 import javax.inject.Inject
 
 class DbDatasource @Inject constructor(
-  private val albumItemDao: AlbumItemDao
+    private val albumItemDao: AlbumItemDao
 ) : TwoWayMapper<AlbumItem, DbAlbumItem> {
 
     override fun transform(item: AlbumItem): DbAlbumItem {
@@ -43,7 +43,7 @@ class DbDatasource @Inject constructor(
     }
 
     fun getAllAlbums(): List<AlbumItem> {
-        return getAllAlbumItem().distinctBy { it.albumId }
+        return getAllAlbumItem().distinctBy { albumItem -> albumItem.albumId }
     }
 
     suspend fun getItemsOfAlbum(albumId: Int): List<AlbumItem> {
