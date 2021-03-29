@@ -43,6 +43,7 @@ class HomeViewModel @Inject constructor(
                     _albums.value = ResultWrapper.loading(emptyList())
                     updateAlbumsDatas(repository.getAlbumsAsync().await())
                 } else {
+                    _albums.value = ResultWrapper.loading(emptyList())
                     var offlineAlbums: List<AlbumItem>
                     withContext(Dispatchers.IO) {
                         offlineAlbums = repository.getAlbums()
