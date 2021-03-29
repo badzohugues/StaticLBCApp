@@ -1,11 +1,8 @@
 package com.badzohugues.staticlbcapp.misc
 
-import androidx.annotation.StringRes
-import com.badzohugues.staticlbcapp.R
-
-enum class ErrorMessage(@StringRes val resId: Int) {
-    SERVER_ERROR(R.string.error_server),
-    NETWORK_ERROR(R.string.error_no_network),
-    DATABASE_ERROR(R.string.error_database),
-    UNKNOWN_ERROR(R.string.error_unknown)
+enum class ErrorMessage(val message: String) {
+    SERVER_ERROR("Erreur serveur"),
+    NETWORK_ERROR("Aucun réseau"),
+    DATABASE_ERROR("Erreur base de données"),
+    UNKNOWN_ERROR("Erreur inconnu")
 }

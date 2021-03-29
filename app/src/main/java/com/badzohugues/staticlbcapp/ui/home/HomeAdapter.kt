@@ -8,14 +8,13 @@ import com.badzohugues.staticlbcapp.R
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.databinding.ItemAlbumBinding
 
-class HomeAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit) = { }) : RecyclerView.Adapter<HomeAdapter.AlbumViewHolder>() {
+class HomeAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit) = { }) :
+    RecyclerView.Adapter<HomeAdapter.AlbumViewHolder>() {
     var albumItems: List<AlbumItem> = ArrayList()
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
-
-    fun itemClick(itemClick:(item: AlbumItem) -> Unit) = apply { this.itemAlbumClick = itemClick }
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         return AlbumViewHolder.from(parent)
@@ -35,7 +34,8 @@ class HomeAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit) = { })
 
     override fun getItemCount(): Int = albumItems.size
 
-    class AlbumViewHolder(private val binding: ItemAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
+    class AlbumViewHolder(private val binding: ItemAlbumBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val thumbnailImv = binding.imvThumbnail
         fun bind(itemData: AlbumItem) {
             binding.albumItemData = itemData
@@ -44,9 +44,12 @@ class HomeAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit) = { })
 
         companion object {
             fun from(parent: ViewGroup): AlbumViewHolder {
-                return AlbumViewHolder(ItemAlbumBinding.inflate(LayoutInflater.from(parent.context),
-                    parent,
-                    false)
+                return AlbumViewHolder(
+                    ItemAlbumBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
                 )
             }
         }

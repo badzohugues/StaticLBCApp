@@ -8,14 +8,12 @@ import com.badzohugues.staticlbcapp.R
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.databinding.ItemGridAlbumBinding
 
-class AlbumDetailsAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit) = { }) : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumViewHolder>() {
+class AlbumDetailsAdapter() : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumViewHolder>() {
     var albumItems: List<AlbumItem> = ArrayList()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
-
-    fun itemClick(itemClick:(item: AlbumItem) -> Unit) = apply { this.itemAlbumClick = itemClick }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumViewHolder {
         return AlbumViewHolder.from(parent)
@@ -30,7 +28,6 @@ class AlbumDetailsAdapter(private var itemAlbumClick: ((item: AlbumItem) -> Unit
             placeholder(R.drawable.shape_square_placeholder)
             error(R.drawable.shape_square_placeholder)
         }
-        holder.itemView.setOnClickListener { itemAlbumClick.invoke(albumItem) }
     }
 
     override fun getItemCount(): Int = albumItems.size

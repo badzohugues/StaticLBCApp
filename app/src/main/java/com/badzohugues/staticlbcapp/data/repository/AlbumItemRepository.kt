@@ -1,28 +1,46 @@
 package com.badzohugues.staticlbcapp.data.repository
 
 import com.badzohugues.staticlbcapp.data.api.datasource.ApiDatasource
-import com.badzohugues.staticlbcapp.data.db.dao.AlbumItemDao
 import com.badzohugues.staticlbcapp.data.db.datasource.DbDatasource
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
+import com.badzohugues.staticlbcapp.misc.ResultWrapper
+import com.badzohugues.staticlbcapp.misc.Status
+import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class AlbumItemRepository(private val albumItemDao: AlbumItemDao) {
-    private val dbDatasource by lazy { DbDatasource(albumItemDao) }
-    private val apiDatasource by lazy { ApiDatasource() }
+class AlbumItemRepository @Inject constructor(
+    private val dbDatasource: DbDatasource,
+    private val apiDatasource: ApiDatasource
+) : Repository {
 
-    suspend fun fetchAllAlbumItem(): List<AlbumItem> {
-        return apiDatasource.getAlbumItems()
-    }
+    override suspend fun fetchAllAlbumItemAsync(): Deferred<ResultWrapper<List<AlbumItem>>> =
+        withContext(Dispatchers.IO) {
+            async { apiDatasource.getAllAlbumItems() }
+        }
 
-    suspend fun getAlbums(isConnected: Boolean): List<AlbumItem> {
-        return if(isConnected) apiDatasource.getAlbums()
-        else dbDatasource.getAllAlbums()
-    }
+    override suspend fun getAlbumsAsync(): Deferred<ResultWrapper<List<AlbumItem>>> =
+        withContext(Dispatchers.IO) {
+            async {
+                val result = saveAllAlbumItemsAsync().await()
 
-    suspend fun saveAllAlbumItems(albumItems: List<AlbumItem>) {
-        if (dbDatasource.getAllAlbums().isEmpty()) dbDatasource.insertAll(albumItems)
-    }
+                if (result.status == Status.SUCCESS) ResultWrapper.success(dbDatasource.getAllAlbums())
+                else ResultWrapper.error(result.message, emptyList())
+            }
+        }
 
-    suspend fun getItemsOfAlbum(albumId: Int): List<AlbumItem> {
-        return dbDatasource.getAlbumItems(albumId)
-    }
+    override suspend fun saveAllAlbumItemsAsync(): Deferred<ResultWrapper<Boolean>> =
+        withContext(Dispatchers.IO) {
+            async {
+                val result = fetchAllAlbumItemAsync().await()
+
+                if (result.status == Status.SUCCESS) {
+                    if (!result.data.isNullOrEmpty()) dbDatasource.insertAll(result.data)
+                    ResultWrapper.success(true)
+                } else ResultWrapper.error(result.message, false)
+            }
+        }
+
+    override suspend fun getAlbums(): List<AlbumItem> = dbDatasource.getAllAlbums()
+
+    override suspend fun getItemsOfAlbum(albumId: Int): List<AlbumItem> = dbDatasource.getItemsOfAlbum(albumId)
 }
