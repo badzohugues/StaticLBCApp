@@ -7,6 +7,7 @@ import com.badzohugues.staticlbcapp.getOrAwaitValue
 import com.badzohugues.staticlbcapp.misc.Status
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -28,23 +29,25 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `getAlbums from Api`() {
-        /*viewModel.getAllAlbumItemFromApi()
-        val result = viewModel.albums().getOrAwaitValue()
-        assertThat(result.status).isEqualTo(Status.ERROR)*/
-    }
-
-    /*@Test
-    fun `getAlbums from Database`() {
-        viewModel.getAlbums(true)
-        val result = viewModel.albums().getOrAwaitValue()
+    fun `getAlbums when api return error`() {
+        runBlockingTest {
+            viewModel.getAlbums(true)
+        }
+        val result = viewModel.albums.getOrAwaitValue()
         assertThat(result.status).isEqualTo(Status.ERROR)
     }
 
     @Test
-    fun `get items of album`() {
-        viewModel.getItemsOfAlbum(12)
-        val result = viewModel.albumItems().getOrAwaitValue()
-        assertThat(result.status).isEqualTo(Status.ERROR)
-    }*/
+    fun `getAlbums from Database`() {
+        viewModel.getAlbums(false)
+        val result = viewModel.albums.getOrAwaitValue()
+        assertThat(result.status).isEqualTo(Status.SUCCESS)
+    }
+
+    @Test
+    fun `get items of album success`() {
+        viewModel.getItemsOfAlbum(42)
+        val result = viewModel.itemsOfAlbum().getOrAwaitValue()
+        assertThat(result.status).isEqualTo(Status.SUCCESS)
+    }
 }
