@@ -3,6 +3,7 @@ package com.badzohugues.staticlbcapp.ui.home
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.badzohugues.staticlbcapp.MainCoroutinesRule
 import com.badzohugues.staticlbcapp.data.repository.FakeAlbumItemRepository
+import com.badzohugues.staticlbcapp.data.repository.Repository
 import com.badzohugues.staticlbcapp.getOrAwaitValue
 import com.badzohugues.staticlbcapp.misc.Status
 import com.google.common.truth.Truth.assertThat
@@ -22,32 +23,35 @@ class HomeViewModelTest {
     var mainCoroutinesRule = MainCoroutinesRule()
 
     private lateinit var viewModel: HomeViewModel
+    private lateinit var repository: Repository
 
     @Before
     fun setup() {
-        viewModel = HomeViewModel(FakeAlbumItemRepository())
+        repository = FakeAlbumItemRepository()
+        viewModel = HomeViewModel(repository)
     }
 
     @Test
     fun `getAlbums when api return error`() {
         runBlockingTest {
+            (repository as FakeAlbumItemRepository).toForceNetworkError(true) // to simulate error from api
             viewModel.getAlbums(true)
+            var result = viewModel.albums.getOrAwaitValue()
+            assertThat(result.status).isEqualTo(Status.LOADING)
+            result = viewModel.albums.getOrAwaitValue()
+            assertThat(result.status).isEqualTo(Status.ERROR)
         }
-        val result = viewModel.albums.getOrAwaitValue()
-        assertThat(result.status).isEqualTo(Status.ERROR)
     }
 
     @Test
-    fun `getAlbums from Database`() {
-        viewModel.getAlbums(false)
-        val result = viewModel.albums.getOrAwaitValue()
-        assertThat(result.status).isEqualTo(Status.SUCCESS)
-    }
-
-    @Test
-    fun `get items of album success`() {
-        viewModel.getItemsOfAlbum(42)
-        val result = viewModel.itemsOfAlbum().getOrAwaitValue()
-        assertThat(result.status).isEqualTo(Status.SUCCESS)
+    fun `getAlbumsAlbumAsync return success and album correctly saved in database`() {
+        runBlockingTest {
+            viewModel.getAlbums(true)
+            var result = viewModel.albums.getOrAwaitValue()
+            assertThat(result.status).isEqualTo(Status.LOADING)
+            result = viewModel.albums.getOrAwaitValue()
+            assertThat(result.status).isEqualTo(Status.SUCCESS)
+            assertThat(result.data).isNotEmpty()
+        }
     }
 }
