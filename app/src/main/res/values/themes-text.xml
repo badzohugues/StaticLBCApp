@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ItemTitleText">
+        <item name="android:textSize">@dimen/text_size_18</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:maxLines">2</item>
+    </style>
+    <style name="SubtitleText">
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:maxLines">2</item>
+    </style>
+    <style name="TwoSubtitleText" parent="SubtitleText">
+        <item name="android:lines">2</item>
+    </style>
+</resources>

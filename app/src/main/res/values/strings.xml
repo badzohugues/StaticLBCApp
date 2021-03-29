@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">StaticLBCApp</string>
+    <string name="text_no_results">Aucun contenu à afficher</string>
+    <string name="imv_content_description">content description</string>
+    <string name="txv_text_album_title">Album #%d</string>
+    <string name="home_fragment_toolbar_title">Albums</string>
+    <string name="text_timeout">Trop long, réessayez ultérieurement</string>
+
+    <!--  ERROR MESSAGE  -->
+    <string name="error_server">Erreur serveur</string>
+    <string name="error_database">Erreur base de données</string>
+    <string name="error_unknown">Erreur inconnu</string>
+    <string name="error_no_network">Aucun réseau</string>
+
+    <!--  PLURALS  -->
+    <plurals name="plural_items_subtitle">
+        <item quantity="one">%d élément</item>
+        <item quantity="other">%d éléments</item>
+    </plurals>
 </resources>
