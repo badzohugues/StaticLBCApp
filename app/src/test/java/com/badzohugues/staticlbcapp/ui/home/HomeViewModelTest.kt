@@ -15,10 +15,11 @@ import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class HomeViewModelTest {
+    // Required to test LiveData
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-
+    // Required to use Coroutines
     @get:Rule
     var mainCoroutinesRule = MainCoroutinesRule()
 

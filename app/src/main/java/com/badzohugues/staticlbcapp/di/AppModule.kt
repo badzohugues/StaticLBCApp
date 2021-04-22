@@ -2,6 +2,7 @@ package com.badzohugues.staticlbcapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.badzohugues.staticlbcapp.StaticLBCApplication
 import com.badzohugues.staticlbcapp.data.api.datasource.ApiDatasource
 import com.badzohugues.staticlbcapp.data.api.service.AlbumItemApiService
 import com.badzohugues.staticlbcapp.data.db.dao.AlbumItemDao
@@ -25,6 +26,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    @Singleton
+    @Provides
+    fun provideApplication(@ApplicationContext application: Context): StaticLBCApplication = application as StaticLBCApplication
+
     @Singleton
     @Provides
     fun provideDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(

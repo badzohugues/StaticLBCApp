@@ -8,7 +8,7 @@ import com.badzohugues.staticlbcapp.R
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.databinding.ItemGridAlbumBinding
 
-class AlbumDetailsAdapter() : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumViewHolder>() {
+class AlbumDetailsAdapter : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumViewHolder>() {
     var albumItems: List<AlbumItem> = ArrayList()
         set(value) {
             field = value
