@@ -54,15 +54,14 @@ object AppModule {
             .client(client)
             .build()
             .create(AlbumItemApiService::class.java)
-
     }
 
     @Singleton
     @Provides
     fun provideRepository(
-        dbDataSource: DbDatasource,
+        dbDatasource: DbDatasource,
         apiDatasource: ApiDatasource
-    ) = AlbumItemRepository(dbDataSource, apiDatasource) as Repository
+    ) = AlbumItemRepository(dbDatasource, apiDatasource) as Repository
 
     @Singleton
     @Provides
