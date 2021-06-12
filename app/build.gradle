@@ -8,12 +8,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.badzohugues.staticlbcapp"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -40,6 +41,10 @@ android {
     }
 }
 
+configurations {
+    ktlint
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
@@ -53,8 +58,8 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$versions.retrofitConverter"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutinesAndroid"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.livedata_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.livedata"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
     implementation "androidx.room:room-runtime:$versions.room"
     implementation "androidx.room:room-ktx:$versions.room"
     implementation "androidx.navigation:navigation-fragment-ktx:$versions.fragment"
@@ -62,13 +67,16 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$versions.legacySupport"
     implementation "io.coil-kt:coil:$versions.coil"
     implementation "com.google.dagger:hilt-android:$versions.daggerHilt"
-    implementation "androidx.fragment:fragment-testing:$versions.fragmentTest"
+    debugImplementation "androidx.fragment:fragment-testing:$versions.fragmentTest"
     kapt "androidx.room:room-compiler:$versions.room"
     kapt "com.google.dagger:hilt-compiler:$versions.daggerHilt"
 
     // Hilt
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$versions.hiltLifecycle"
     kapt "androidx.hilt:hilt-compiler:$versions.hiltCompiler"
+
+    //KtLint
+    ktlint "com.pinterest:ktlint:$versions.ktlint"
 
     // Local Unit Tests
     implementation "androidx.test:core:$versions.androidXTest"
@@ -86,4 +94,21 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$versions.test_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.expresso"
     androidTestImplementation "org.mockito:mockito-core:$versions.mockito"
+}
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "src/**/*.kt"
+}
+
+afterEvaluate {
+    assembleDebug.dependsOn ktlint
+}
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "-F", "src/**/*.kt"
 }

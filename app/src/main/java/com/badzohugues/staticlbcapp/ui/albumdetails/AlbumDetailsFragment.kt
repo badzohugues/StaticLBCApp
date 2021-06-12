@@ -54,17 +54,20 @@ class AlbumDetailsFragment : BaseFragment<FragmentAlbumDetailsBinding, List<Albu
     }
 
     override fun prepareData() {
-        homeViewModel.itemsOfAlbum().observe(viewLifecycleOwner, {
-            when (it.status) {
-                Status.SUCCESS -> showSuccess(it.data ?: emptyList())
-                Status.LOADING -> showLoading()
-                Status.ERROR -> activity?.let { context ->
-                    showError(
-                        it.message ?: context.resources.getString(R.string.error_unknown)
-                    )
+        homeViewModel.itemsOfAlbum().observe(
+            viewLifecycleOwner,
+            {
+                when (it.status) {
+                    Status.SUCCESS -> showSuccess(it.data ?: emptyList())
+                    Status.LOADING -> showLoading()
+                    Status.ERROR -> activity?.let { context ->
+                        showError(
+                            it.message ?: context.resources.getString(R.string.error_unknown)
+                        )
+                    }
                 }
             }
-        })
+        )
     }
 
     override fun showLoading() {

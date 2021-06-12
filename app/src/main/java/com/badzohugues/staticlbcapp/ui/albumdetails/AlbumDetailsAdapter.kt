@@ -8,7 +8,7 @@ import com.badzohugues.staticlbcapp.R
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.databinding.ItemGridAlbumBinding
 
-class AlbumDetailsAdapter() : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumViewHolder>() {
+class AlbumDetailsAdapter : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumViewHolder>() {
     var albumItems: List<AlbumItem> = ArrayList()
         set(value) {
             field = value
@@ -32,7 +32,8 @@ class AlbumDetailsAdapter() : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumView
 
     override fun getItemCount(): Int = albumItems.size
 
-    class AlbumViewHolder(private val binding: ItemGridAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
+    class AlbumViewHolder(private val binding: ItemGridAlbumBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val thumbnailImv = binding.imvGridItem
         fun bind(itemData: AlbumItem) {
             binding.albumItemData = itemData
@@ -44,8 +45,9 @@ class AlbumDetailsAdapter() : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumView
                 return AlbumViewHolder(
                     ItemGridAlbumBinding.inflate(
                         LayoutInflater.from(parent.context),
-                    parent,
-                    false)
+                        parent,
+                        false
+                    )
                 )
             }
         }

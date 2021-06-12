@@ -2,6 +2,7 @@ package com.badzohugues.staticlbcapp.di
 
 import android.content.Context
 import androidx.room.Room
+import com.badzohugues.staticlbcapp.StaticLBCApplication
 import com.badzohugues.staticlbcapp.data.api.datasource.ApiDatasource
 import com.badzohugues.staticlbcapp.data.api.service.AlbumItemApiService
 import com.badzohugues.staticlbcapp.data.db.dao.AlbumItemDao
@@ -27,6 +28,11 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
+    fun provideApplication(@ApplicationContext application: Context): StaticLBCApplication =
+        application as StaticLBCApplication
+
+    @Singleton
+    @Provides
     fun provideDatabase(@ApplicationContext context: Context) = Room.databaseBuilder(
         context.applicationContext,
         StaticLBCDatabase::class.java,
@@ -40,24 +46,25 @@ object AppModule {
     @Singleton
     @Provides
     fun provideAlbumItemApiService(): AlbumItemApiService {
-        val client = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }).build()
+        val client = OkHttpClient.Builder().addInterceptor(
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
+        ).build()
 
         return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
             .create(AlbumItemApiService::class.java)
-
     }
 
     @Singleton
     @Provides
     fun provideRepository(
-        dbDataSource: DbDatasource,
+        dbDatasource: DbDatasource,
         apiDatasource: ApiDatasource
-    ) = AlbumItemRepository(dbDataSource, apiDatasource) as Repository
+    ) = AlbumItemRepository(dbDatasource, apiDatasource) as Repository
 
     @Singleton
     @Provides

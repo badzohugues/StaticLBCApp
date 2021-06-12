@@ -14,19 +14,19 @@ class FakeAlbumItemRepository(private var forceError: Boolean = false) : Reposit
 
     private val albumItem: MutableList<AlbumItem> = mutableListOf()
     private val apiAlbumItemA = ApiAlbumItem(
-    424242,
-    42,
-    "AlbumItemTest",
-    "https://via.placeholder.com/600/e403d1",
-    "https://via.placeholder.com/150/e403d1"
+        424242,
+        42,
+        "AlbumItemTest",
+        "https://via.placeholder.com/600/e403d1",
+        "https://via.placeholder.com/150/e403d1"
     )
 
     private val apiAlbumItemB = ApiAlbumItem(
-    242424,
-    42,
-    "AlbumItemTest",
-    "https://via.placeholder.com/600/e403d1",
-    "https://via.placeholder.com/150/e403d1"
+        242424,
+        42,
+        "AlbumItemTest",
+        "https://via.placeholder.com/600/e403d1",
+        "https://via.placeholder.com/150/e403d1"
     )
 
     private val apiAlbumItemC = ApiAlbumItem(
@@ -37,7 +37,8 @@ class FakeAlbumItemRepository(private var forceError: Boolean = false) : Reposit
         "https://via.placeholder.com/150/e403d1"
     )
 
-    val apiDatasource = FakeApiDatasource(mutableListOf(apiAlbumItemA, apiAlbumItemB, apiAlbumItemC))
+    val apiDatasource =
+        FakeApiDatasource(mutableListOf(apiAlbumItemA, apiAlbumItemB, apiAlbumItemC))
 
     override suspend fun fetchAllAlbumItemAsync(): Deferred<ResultWrapper<List<AlbumItem>>> {
         return withContext(Dispatchers.IO) {
@@ -45,26 +46,28 @@ class FakeAlbumItemRepository(private var forceError: Boolean = false) : Reposit
         }
     }
 
-    override suspend fun saveAllAlbumItemsAsync(): Deferred<ResultWrapper<Boolean>> = withContext(Dispatchers.IO) {
-        async {
-            val result = fetchAllAlbumItemAsync().await()
-            if (result.status == Status.SUCCESS) {
-                if (!result.data.isNullOrEmpty()) {
-                    albumItem.addAll(result.data ?: emptyList())
-                }
-                ResultWrapper.success(true)
-            } else ResultWrapper.error(result.message, false)
+    override suspend fun saveAllAlbumItemsAsync(): Deferred<ResultWrapper<Boolean>> =
+        withContext(Dispatchers.IO) {
+            async {
+                val result = fetchAllAlbumItemAsync().await()
+                if (result.status == Status.SUCCESS) {
+                    if (!result.data.isNullOrEmpty()) {
+                        albumItem.addAll(result.data ?: emptyList())
+                    }
+                    ResultWrapper.success(true)
+                } else ResultWrapper.error(result.message, false)
+            }
         }
-    }
 
-    override suspend fun getAlbumsAsync(): Deferred<ResultWrapper<List<AlbumItem>>> = withContext(Dispatchers.IO) {
-        async {
-            val result = saveAllAlbumItemsAsync().await()
+    override suspend fun getAlbumsAsync(): Deferred<ResultWrapper<List<AlbumItem>>> =
+        withContext(Dispatchers.IO) {
+            async {
+                val result = saveAllAlbumItemsAsync().await()
 
-            if (result.status == Status.SUCCESS) ResultWrapper.success(albumItem)
-            else ResultWrapper.error(result.message, emptyList())
+                if (result.status == Status.SUCCESS) ResultWrapper.success(albumItem)
+                else ResultWrapper.error(result.message, emptyList())
+            }
         }
-    }
 
     override suspend fun getAlbums(): List<AlbumItem> = albumItem
 
@@ -72,5 +75,7 @@ class FakeAlbumItemRepository(private var forceError: Boolean = false) : Reposit
         return albumItem.filter { item -> item.albumId == albumId }
     }
 
-    fun toForceNetworkError(value: Boolean) { forceError = value }
+    fun toForceNetworkError(value: Boolean) {
+        forceError = value
+    }
 }

@@ -8,7 +8,11 @@ import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.data.repository.Repository
 import com.badzohugues.staticlbcapp.misc.ResultWrapper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,6 +23,7 @@ class HomeViewModel @Inject constructor(
     private val _albums = MutableLiveData<ResultWrapper<List<AlbumItem>>>()
     private val _itemsOfAlbum = MutableLiveData<ResultWrapper<List<AlbumItem>>>()
     private var lastAlbumId = 0
+    val albums: LiveData<ResultWrapper<List<AlbumItem>>> get() = _albums
 
     private fun updateAlbumsDatas(allAlbums: ResultWrapper<List<AlbumItem>>) {
         _albums.value = allAlbums
@@ -31,8 +36,6 @@ class HomeViewModel @Inject constructor(
         _itemsOfAlbum.value = itemsOfAlbum
         lastAlbumId = currentAlbumId
     }
-
-    val albums: LiveData<ResultWrapper<List<AlbumItem>>> get() = _albums
 
     fun itemsOfAlbum(): LiveData<ResultWrapper<List<AlbumItem>>> = _itemsOfAlbum
 

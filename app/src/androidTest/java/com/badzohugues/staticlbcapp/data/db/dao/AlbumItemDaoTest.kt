@@ -7,7 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.badzohugues.staticlbcapp.data.db.DbAlbumItem
 import com.badzohugues.staticlbcapp.data.db.room.StaticLBCDatabase
-import com.badzohugues.staticlbcapp.getOrAwaitValueAndroid
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
