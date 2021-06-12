@@ -1,7 +1,6 @@
 package com.badzohugues.staticlbcapp.data.api.service
 
 import com.badzohugues.staticlbcapp.data.api.ApiAlbumItem
-import com.badzohugues.staticlbcapp.misc.ResultWrapper
 import retrofit2.Response
 import retrofit2.http.GET
 

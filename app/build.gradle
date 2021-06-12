@@ -41,6 +41,10 @@ android {
     }
 }
 
+configurations {
+    ktlint
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
@@ -71,6 +75,9 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$versions.hiltLifecycle"
     kapt "androidx.hilt:hilt-compiler:$versions.hiltCompiler"
 
+    //KtLint
+    ktlint "com.pinterest:ktlint:$versions.ktlint"
+
     // Local Unit Tests
     implementation "androidx.test:core:$versions.androidXTest"
     testImplementation "androidx.arch.core:core-testing:$versions.coreTesting"
@@ -87,4 +94,21 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$versions.test_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.expresso"
     androidTestImplementation "org.mockito:mockito-core:$versions.mockito"
+}
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "src/**/*.kt"
+}
+
+afterEvaluate {
+    assembleDebug.dependsOn ktlint
+}
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args "-F", "src/**/*.kt"
 }

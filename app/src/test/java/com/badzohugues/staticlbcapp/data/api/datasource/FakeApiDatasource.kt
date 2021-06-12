@@ -8,7 +8,7 @@ import com.badzohugues.staticlbcapp.misc.ResultWrapper
 class FakeApiDatasource(private val apiAlbumItem: List<ApiAlbumItem> = emptyList()) : Mapper<ApiAlbumItem, AlbumItem> {
 
     fun getAllAlbumItems(returnError: Boolean): ResultWrapper<List<AlbumItem>> {
-        return if(returnError) ResultWrapper.error("Error", null)
+        return if (returnError) ResultWrapper.error("Error", null)
         else ResultWrapper.success(apiAlbumItem.map { transform(it) })
     }
 

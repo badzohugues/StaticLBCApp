@@ -28,7 +28,8 @@ import javax.inject.Singleton
 object AppModule {
     @Singleton
     @Provides
-    fun provideApplication(@ApplicationContext application: Context): StaticLBCApplication = application as StaticLBCApplication
+    fun provideApplication(@ApplicationContext application: Context): StaticLBCApplication =
+        application as StaticLBCApplication
 
     @Singleton
     @Provides
@@ -45,9 +46,11 @@ object AppModule {
     @Singleton
     @Provides
     fun provideAlbumItemApiService(): AlbumItemApiService {
-        val client = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }).build()
+        val client = OkHttpClient.Builder().addInterceptor(
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            }
+        ).build()
 
         return Retrofit.Builder().baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())

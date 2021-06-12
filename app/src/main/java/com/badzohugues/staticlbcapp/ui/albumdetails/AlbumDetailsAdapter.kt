@@ -32,7 +32,8 @@ class AlbumDetailsAdapter : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumViewHo
 
     override fun getItemCount(): Int = albumItems.size
 
-    class AlbumViewHolder(private val binding: ItemGridAlbumBinding) : RecyclerView.ViewHolder(binding.root) {
+    class AlbumViewHolder(private val binding: ItemGridAlbumBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         val thumbnailImv = binding.imvGridItem
         fun bind(itemData: AlbumItem) {
             binding.albumItemData = itemData
@@ -44,8 +45,9 @@ class AlbumDetailsAdapter : RecyclerView.Adapter<AlbumDetailsAdapter.AlbumViewHo
                 return AlbumViewHolder(
                     ItemGridAlbumBinding.inflate(
                         LayoutInflater.from(parent.context),
-                    parent,
-                    false)
+                        parent,
+                        false
+                    )
                 )
             }
         }

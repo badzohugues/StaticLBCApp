@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 
-abstract class BaseActivity<B: ViewBinding>: AppCompatActivity() {
+abstract class BaseActivity<B : ViewBinding> : AppCompatActivity() {
     var isConnected = true
     lateinit var binding: B
 
