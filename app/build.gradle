@@ -56,6 +56,8 @@ dependencies {
     implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttpInterceptor"
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofit2"
     implementation "com.squareup.retrofit2:converter-gson:$versions.retrofitConverter"
+    implementation "io.reactivex.rxjava3:rxjava:$versions.rxJava"
+    implementation "io.reactivex.rxjava3:rxandroid:$versions.rxAndroid"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutinesCore"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutinesAndroid"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$versions.livedata"
