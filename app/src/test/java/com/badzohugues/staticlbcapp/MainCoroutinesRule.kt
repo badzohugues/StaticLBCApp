@@ -22,7 +22,7 @@ class MainCoroutinesRule(
 
     override fun finished(description: Description?) {
         super.finished(description)
-        cleanupTestCoroutines()
         Dispatchers.resetMain()
+        cleanupTestCoroutines()
     }
 }

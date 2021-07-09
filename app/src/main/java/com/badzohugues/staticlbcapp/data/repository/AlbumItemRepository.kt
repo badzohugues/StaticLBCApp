@@ -5,24 +5,25 @@ import com.badzohugues.staticlbcapp.data.db.datasource.DbDatasource
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.misc.ResultWrapper
 import com.badzohugues.staticlbcapp.misc.Status
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class AlbumItemRepository @Inject constructor(
     private val dbDatasource: DbDatasource,
-    private val apiDatasource: ApiDatasource
+    private val apiDatasource: ApiDatasource,
+    private val dispatcher: CoroutineDispatcher,
 ) : Repository {
 
     override suspend fun fetchAllAlbumItemAsync(): Deferred<ResultWrapper<List<AlbumItem>>> =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             async { apiDatasource.getAllAlbumItems() }
         }
 
     override suspend fun getAlbumsAsync(): Deferred<ResultWrapper<List<AlbumItem>>> =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             async {
                 val result = saveAllAlbumItemsAsync().await()
 
@@ -32,7 +33,7 @@ class AlbumItemRepository @Inject constructor(
         }
 
     override suspend fun saveAllAlbumItemsAsync(): Deferred<ResultWrapper<Boolean>> =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             async {
                 val result = fetchAllAlbumItemAsync().await()
 

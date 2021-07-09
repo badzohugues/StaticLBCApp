@@ -17,6 +17,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -38,6 +40,10 @@ object AppModule {
         StaticLBCDatabase::class.java,
         DATABASE_NAME
     ).build()
+
+    @Singleton
+    @Provides
+    fun provideRepositoryDispatcher() = Dispatchers.IO
 
     @Singleton
     @Provides
@@ -63,8 +69,9 @@ object AppModule {
     @Provides
     fun provideRepository(
         dbDatasource: DbDatasource,
-        apiDatasource: ApiDatasource
-    ) = AlbumItemRepository(dbDatasource, apiDatasource) as Repository
+        apiDatasource: ApiDatasource,
+        dispatcher: CoroutineDispatcher
+    ) = AlbumItemRepository(dbDatasource, apiDatasource, dispatcher) as Repository
 
     @Singleton
     @Provides

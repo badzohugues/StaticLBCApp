@@ -5,12 +5,15 @@ import com.badzohugues.staticlbcapp.data.api.datasource.FakeApiDatasource
 import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.misc.ResultWrapper
 import com.badzohugues.staticlbcapp.misc.Status
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 
-class FakeAlbumItemRepository(private var forceError: Boolean = false) : Repository {
+class FakeAlbumItemRepository(
+    private var forceError: Boolean = false,
+    private val dispatcher: CoroutineDispatcher
+) : Repository {
 
     private val albumItem: MutableList<AlbumItem> = mutableListOf()
     private val apiAlbumItemA = ApiAlbumItem(
@@ -37,17 +40,17 @@ class FakeAlbumItemRepository(private var forceError: Boolean = false) : Reposit
         "https://via.placeholder.com/150/e403d1"
     )
 
-    val apiDatasource =
+    private val apiDatasource =
         FakeApiDatasource(mutableListOf(apiAlbumItemA, apiAlbumItemB, apiAlbumItemC))
 
     override suspend fun fetchAllAlbumItemAsync(): Deferred<ResultWrapper<List<AlbumItem>>> {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             async { apiDatasource.getAllAlbumItems(forceError) }
         }
     }
 
     override suspend fun saveAllAlbumItemsAsync(): Deferred<ResultWrapper<Boolean>> =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             async {
                 val result = fetchAllAlbumItemAsync().await()
                 if (result.status == Status.SUCCESS) {
@@ -60,7 +63,7 @@ class FakeAlbumItemRepository(private var forceError: Boolean = false) : Reposit
         }
 
     override suspend fun getAlbumsAsync(): Deferred<ResultWrapper<List<AlbumItem>>> =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             async {
                 val result = saveAllAlbumItemsAsync().await()
 

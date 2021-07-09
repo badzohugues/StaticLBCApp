@@ -7,7 +7,9 @@ import com.badzohugues.staticlbcapp.data.repository.Repository
 import com.badzohugues.staticlbcapp.getOrAwaitValue
 import com.badzohugues.staticlbcapp.misc.Status
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -25,10 +27,12 @@ class HomeViewModelTest {
 
     private lateinit var viewModel: HomeViewModel
     private lateinit var repository: Repository
+    private lateinit var testCoroutineDispatcher: CoroutineDispatcher
 
     @Before
     fun setup() {
-        repository = FakeAlbumItemRepository()
+        testCoroutineDispatcher = TestCoroutineDispatcher()
+        repository = FakeAlbumItemRepository(dispatcher = testCoroutineDispatcher)
         viewModel = HomeViewModel(repository)
     }
 
@@ -37,9 +41,7 @@ class HomeViewModelTest {
         runBlockingTest {
             (repository as FakeAlbumItemRepository).toForceNetworkError(true) // to simulate error from api
             viewModel.getAlbums(true)
-            var result = viewModel.albums.getOrAwaitValue()
-            assertThat(result.status).isEqualTo(Status.LOADING)
-            result = viewModel.albums.getOrAwaitValue()
+            val result = viewModel.albums.getOrAwaitValue()
             assertThat(result.status).isEqualTo(Status.ERROR)
         }
     }
@@ -48,9 +50,7 @@ class HomeViewModelTest {
     fun `getAlbumsAlbumAsync return success and album correctly saved in database`() {
         runBlockingTest {
             viewModel.getAlbums(true)
-            var result = viewModel.albums.getOrAwaitValue()
-            assertThat(result.status).isEqualTo(Status.LOADING)
-            result = viewModel.albums.getOrAwaitValue()
+            val result = viewModel.albums.getOrAwaitValue()
             assertThat(result.status).isEqualTo(Status.SUCCESS)
             assertThat(result.data).isNotEmpty()
         }
