@@ -39,6 +39,15 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    kapt {
+        javacOptions {
+            // These options are normally set automatically via the Hilt Gradle plugin, but we
+            // set them manually to workaround a bug in the Kotlin 1.5.20
+            option("-Adagger.fastInit=ENABLED")
+            option("-Adagger.hilt.android.internal.disableAndroidSuperclassValidation=true")
+        }
+    }
 }
 
 configurations {
@@ -47,7 +56,6 @@ configurations {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"
     implementation "androidx.core:core-ktx:$versions.core_ktx"
     implementation "androidx.appcompat:appcompat:$versions.appCompat"
     implementation "com.google.android.material:material:$versions.material"
@@ -66,13 +74,13 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$versions.navigation"
     implementation "androidx.legacy:legacy-support-v4:$versions.legacySupport"
     implementation "io.coil-kt:coil:$versions.coil"
-    implementation "com.google.dagger:hilt-android:$versions.daggerHilt"
     debugImplementation "androidx.fragment:fragment-testing:$versions.fragmentTest"
     kapt "androidx.room:room-compiler:$versions.room"
-    kapt "com.google.dagger:hilt-compiler:$versions.daggerHilt"
 
     // Hilt
+    implementation "com.google.dagger:hilt-android:$versions.daggerHilt"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$versions.hiltLifecycle"
+    kapt "com.google.dagger:hilt-compiler:$versions.daggerHilt"
     kapt "androidx.hilt:hilt-compiler:$versions.hiltCompiler"
 
     //KtLint
@@ -95,6 +103,7 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$versions.expresso"
     androidTestImplementation "org.mockito:mockito-core:$versions.mockito"
 }
+
 task ktlint(type: JavaExec, group: "verification") {
     description = "Check Kotlin code style."
     classpath = configurations.ktlint

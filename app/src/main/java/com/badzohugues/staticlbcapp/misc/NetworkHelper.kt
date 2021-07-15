@@ -16,8 +16,9 @@ object NetworkHelper : LiveData<Boolean>() {
 
     fun init(application: Application) {
         this.application = application
-        cm =
-            NetworkHelper.application.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        cm = NetworkHelper.application.getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
         networkRequest = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
             .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)

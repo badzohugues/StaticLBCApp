@@ -18,8 +18,8 @@ import com.badzohugues.staticlbcapp.misc.Status
 import com.badzohugues.staticlbcapp.misc.itemdecoration.SpacingDecoration
 
 class HomeFragment : BaseFragment<FragmentHomeBinding, List<AlbumItem>>() {
-    private val homeViewModel: HomeViewModel by activityViewModels()
     private lateinit var homeAdapter: HomeAdapter
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun getViewBinding(
         inflater: LayoutInflater,

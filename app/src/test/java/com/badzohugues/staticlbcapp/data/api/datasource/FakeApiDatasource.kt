@@ -5,7 +5,9 @@ import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.data.mapper.Mapper
 import com.badzohugues.staticlbcapp.misc.ResultWrapper
 
-class FakeApiDatasource(private val apiAlbumItem: List<ApiAlbumItem> = emptyList()) : Mapper<ApiAlbumItem, AlbumItem> {
+class FakeApiDatasource(
+    private val apiAlbumItem: List<ApiAlbumItem> = emptyList()
+) : Mapper<ApiAlbumItem, AlbumItem> {
 
     fun getAllAlbumItems(returnError: Boolean): ResultWrapper<List<AlbumItem>> {
         return if (returnError) ResultWrapper.error("Error", null)

@@ -27,8 +27,11 @@ class AlbumItemRepository @Inject constructor(
             async {
                 val result = saveAllAlbumItemsAsync().await()
 
-                if (result.status == Status.SUCCESS) ResultWrapper.success(dbDatasource.getAllAlbums())
-                else ResultWrapper.error(result.message, emptyList())
+                if (result.status == Status.SUCCESS) {
+                    ResultWrapper.success(dbDatasource.getAllAlbums())
+                } else {
+                    ResultWrapper.error(result.message, emptyList())
+                }
             }
         }
 
@@ -46,5 +49,6 @@ class AlbumItemRepository @Inject constructor(
 
     override suspend fun getAlbums(): List<AlbumItem> = dbDatasource.getAllAlbums()
 
-    override suspend fun getItemsOfAlbum(albumId: Int): List<AlbumItem> = dbDatasource.getItemsOfAlbum(albumId)
+    override suspend fun getItemsOfAlbum(albumId: Int): List<AlbumItem> =
+        dbDatasource.getItemsOfAlbum(albumId)
 }

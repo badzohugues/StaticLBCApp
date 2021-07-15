@@ -33,13 +33,14 @@ class HomeViewModelTest {
     fun setup() {
         testCoroutineDispatcher = TestCoroutineDispatcher()
         repository = FakeAlbumItemRepository(dispatcher = testCoroutineDispatcher)
-        viewModel = HomeViewModel(repository)
+        viewModel = HomeViewModel(repository, 42)
     }
 
     @Test
     fun `getAlbums when api return error`() {
         runBlockingTest {
-            (repository as FakeAlbumItemRepository).toForceNetworkError(true) // to simulate error from api
+            // to simulate error from api
+            (repository as FakeAlbumItemRepository).toForceNetworkError(true)
             viewModel.getAlbums(true)
             val result = viewModel.albums.getOrAwaitValue()
             assertThat(result.status).isEqualTo(Status.ERROR)
