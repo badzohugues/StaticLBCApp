@@ -33,7 +33,7 @@ class HomeViewModelTest {
     fun setup() {
         testCoroutineDispatcher = TestCoroutineDispatcher()
         repository = FakeAlbumItemRepository(dispatcher = testCoroutineDispatcher)
-        viewModel = HomeViewModel(repository, 42)
+        viewModel = HomeViewModel(repository)
     }
 
     @Test

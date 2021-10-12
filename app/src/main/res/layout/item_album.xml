@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
         <variable
             name="albumItemData"
@@ -12,10 +13,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_96"
         android:foreground="?android:attr/selectableItemBackground">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/itemBackgroundColor">
+
             <ImageView
                 android:id="@+id/imvThumbnail"
                 android:layout_width="0dp"
@@ -44,6 +47,7 @@
                 app:layout_constraintVertical_chainStyle="packed"
                 android:theme="@style/ItemTitleText"
                 tools:text="Album #1" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>
