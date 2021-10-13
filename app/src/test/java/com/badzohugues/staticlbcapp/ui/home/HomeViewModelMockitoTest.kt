@@ -60,8 +60,8 @@ class HomeViewModelMockitoTest {
     @Test
     fun `getAlbums when api return success`() {
 
-        val bodyResponse: List<ApiAlbumItem>? =
-            Gson().fromJson<List<ApiAlbumItem>>("album_item_response.json")
+        val bodyResponse: List<ApiAlbumItem> =
+            Gson().fromJson("album_item_response.json")
 
         runBlockingTest {
             Mockito.`when`(albumItemService.fetchAllAlbumItems())
