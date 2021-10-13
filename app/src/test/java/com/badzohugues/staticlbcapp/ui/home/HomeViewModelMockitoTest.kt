@@ -2,14 +2,14 @@ package com.badzohugues.staticlbcapp.ui.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.badzohugues.staticlbcapp.MainCoroutinesRule
+import com.badzohugues.staticlbcapp.data.api.ApiAlbumItem
 import com.badzohugues.staticlbcapp.data.api.datasource.ApiDatasource
 import com.badzohugues.staticlbcapp.data.api.service.AlbumItemApiService
 import com.badzohugues.staticlbcapp.data.db.datasource.DbDatasource
-import com.badzohugues.staticlbcapp.data.domain.AlbumItem
 import com.badzohugues.staticlbcapp.data.repository.AlbumItemRepository
+import com.badzohugues.staticlbcapp.fromJson
 import com.badzohugues.staticlbcapp.getOrAwaitValue
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -60,17 +60,15 @@ class HomeViewModelMockitoTest {
     @Test
     fun `getAlbums when api return success`() {
 
-        val type = object : TypeToken<Response<List<AlbumItem>>>() {}.type
-        val bodyResponse: List<AlbumItem> = Gson().fromJson(
-            "album_items_response.json",
-            javaClass,
-            type
-        )
+        val bodyResponse: List<ApiAlbumItem>? =
+            Gson().fromJson<List<ApiAlbumItem>>("album_item_response.json")
 
         runBlockingTest {
             Mockito.`when`(albumItemService.fetchAllAlbumItems())
-                .thenReturn()
+                .thenReturn(Response.success(bodyResponse))
+
             viewModel.getAlbums(true)
+
             val result = viewModel.albums.getOrAwaitValue()
         }
     }
