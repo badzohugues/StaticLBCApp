@@ -9,11 +9,13 @@ import com.badzohugues.staticlbcapp.data.db.datasource.DbDatasource
 import com.badzohugues.staticlbcapp.data.repository.AlbumItemRepository
 import com.badzohugues.staticlbcapp.fromJson
 import com.badzohugues.staticlbcapp.getOrAwaitValue
+import com.badzohugues.staticlbcapp.misc.Status
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -61,15 +63,15 @@ class HomeViewModelMockitoTest {
     fun `getAlbums when api return success`() {
 
         val bodyResponse: List<ApiAlbumItem> =
-            Gson().fromJson("album_item_response.json")
+            Gson().fromJson("album_items_response.json")
 
         runBlockingTest {
             Mockito.`when`(albumItemService.fetchAllAlbumItems())
                 .thenReturn(Response.success(bodyResponse))
 
             viewModel.getAlbums(true)
-
             val result = viewModel.albums.getOrAwaitValue()
+            Assert.assertTrue(result.status == Status.SUCCESS)
         }
     }
 }
